@@ -1,3 +1,4 @@
+const httpConstants = require('http2').constants;
 const cardSchema = require('../models/card');
 
 module.exports.getCards = (request, response) => {
@@ -5,7 +6,7 @@ module.exports.getCards = (request, response) => {
     .find({})
     .then((cards) => response.status(200)
       .send(cards))
-    .catch((err) => response.status(500)
+    .catch((err) => response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       .send({ message: err.message }));
 };
 
@@ -16,7 +17,7 @@ module.exports.deleteCard = (request, response) => {
     .findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
-        return response.status(404)
+        return response.status(httpConstants.HTTP_STATUS_NOT_FOUND)
           .send({ message: 'Not found: Invalid _id' });
       }
 
@@ -25,10 +26,10 @@ module.exports.deleteCard = (request, response) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        response.status(400)
+        response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Card with _id cannot be found' });
       } else {
-        response.status(500)
+        response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
           .send({ message: err.message });
       }
     });
@@ -51,10 +52,10 @@ module.exports.createCard = (request, response) => {
       .send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        response.status(400)
+        response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Invalid data for card creation' });
       } else {
-        response.status(500)
+        response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
           .send({ message: err.message });
       }
     });
@@ -69,7 +70,7 @@ module.exports.addLike = (request, response) => {
     )
     .then((card) => {
       if (!card) {
-        return response.status(404)
+        return response.status(httpConstants.HTTP_STATUS_NOT_FOUND)
           .send({ message: 'Not found: Invalid _id' });
       }
 
@@ -78,11 +79,11 @@ module.exports.addLike = (request, response) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return response.status(400)
+        return response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Invalid data to add like' });
       }
 
-      return response.status(500)
+      return response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         .send({ message: err.message });
     });
 };
@@ -96,7 +97,7 @@ module.exports.deleteLike = (request, response) => {
     )
     .then((card) => {
       if (!card) {
-        return response.status(404)
+        return response.status(httpConstants.HTTP_STATUS_NOT_FOUND)
           .send({ message: 'Not found: Invalid _id' });
       }
 
@@ -105,11 +106,11 @@ module.exports.deleteLike = (request, response) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return response.status(400)
+        return response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Invalid data to delete like' });
       }
 
-      return response.status(500)
+      return response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         .send({ message: err.message });
     });
 };

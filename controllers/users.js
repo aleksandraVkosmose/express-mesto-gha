@@ -1,11 +1,13 @@
+const httpConstants = require('http2').constants;
+
 const userSchema = require('../models/user');
 
 module.exports.getUsers = (request, response) => {
   userSchema
     .find({})
     .then((users) => response.send(users))
-    .catch((err) => response.status(500)
-      .send({ message: err.message }));
+    .catch((err) => response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      .send({ message: 'Default error' }));
 };
 
 module.exports.getUserById = (request, response) => {
@@ -17,17 +19,17 @@ module.exports.getUserById = (request, response) => {
     .then((user) => response.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return response.status(400)
+        return response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Bad Request' });
       }
 
       if (err.name === 'DocumentNotFoundError') {
-        return response.status(404)
+        return response.status(httpConstants.HTTP_STATUS_NOT_FOUND)
           .send({ message: 'User with _id cannot be found' });
       }
 
-      return response.status(500)
-        .send({ message: err.message });
+      return response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        .send({ message: 'Default error' });
     });
 };
 
@@ -48,11 +50,11 @@ module.exports.createUser = (request, response) => {
       .send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        response.status(400)
+        response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Invalid data to create user' });
       } else {
-        response.status(500)
-          .send({ message: err.message });
+        response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+          .send({ message: 'Default error' });
       }
     });
 };
@@ -78,13 +80,13 @@ module.exports.updateUser = (request, response) => {
     .then((user) => response.status(200)
       .send(user))
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return response.status(400)
+      if (err.name === 'ValidationError') {
+        return response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Invalid data to update user' });
       }
 
-      return response.status(500)
-        .send({ message: err.message });
+      return response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        .send({ message: 'Default error' });
     });
 };
 
@@ -103,12 +105,12 @@ module.exports.updateAvatar = (request, response) => {
     .then((user) => response.status(200)
       .send(user))
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        response.status(400)
+      if (err.name === 'CastError') {
+        response.status(httpConstants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: 'Invalid data to update avatar' });
       } else {
-        response.status(500)
-          .send({ message: err.message });
+        response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+          .send({ message: 'Default error' });
       }
     });
 };
