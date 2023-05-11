@@ -6,7 +6,7 @@ module.exports.getUsers = (request, response) => {
   userSchema
     .find({})
     .then((users) => response.send(users))
-    .catch((err) => response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    .catch(() => response.status(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       .send({ message: 'Default error' }));
 };
 
