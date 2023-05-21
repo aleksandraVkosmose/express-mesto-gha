@@ -1,3 +1,7 @@
+/**
+ * @author Aleksandra Kozlova
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');

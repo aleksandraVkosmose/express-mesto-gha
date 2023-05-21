@@ -1,6 +1,7 @@
 /**
  * @author Aleksandra Kozlova
  */
+
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 

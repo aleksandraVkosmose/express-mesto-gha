@@ -1,3 +1,7 @@
+/**
+ * @author Aleksandra Kozlova
+ */
+
 class NotFoundError extends Error {
   constructor(message) {
     super(message);

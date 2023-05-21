@@ -1,3 +1,7 @@
+/**
+ * @author Aleksandra Kozlova
+ */
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const userSchema = require('../models/user');

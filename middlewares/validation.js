@@ -1,3 +1,7 @@
+/**
+ * @author Aleksandra Kozlova
+ */
+
 const {
   Joi,
   celebrate,
